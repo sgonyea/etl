@@ -19,7 +19,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('fastercsv',           '>= 1.2.0')
   s.add_runtime_dependency('adapter_extensions',  '>= 0.9.5.rc1')
 
-  s.add_development_dependency('rake')
   s.add_development_dependency('yard')
   s.add_development_dependency('rspec', '~>2.6.0')
   s.add_development_dependency('infinity_test')
