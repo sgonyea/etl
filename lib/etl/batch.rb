@@ -10,39 +10,35 @@ module ETL #:nodoc:
 
     autoload :UseTempTables, 'etl/batch/use_temp_tables'
 
-    class << self
-      # Resolve the given object to an ETL::Control instance. Acceptable arguments
-      # are:
-      # * The path to a control file as a String
-      # * A File object referencing the control file
-      # * The ETL::Control object (which will just be returned)
-      #
-      # Raises a ControlError if any other type is given
-      def resolve(batch, engine)
-        batch = do_resolve(batch)
-        batch.engine = engine
-        batch
-      end
+    # Resolve the given object to an ETL::Control instance. Acceptable arguments
+    # are:
+    # * The path to a control file as a String
+    # * A File object referencing the control file
+    # * The ETL::Control object (which will just be returned)
+    #
+    # Raises a ControlError if any other type is given
+    def self.resolve(batch, engine)
+      batch = do_resolve(batch)
+      batch.engine = engine
+      batch
+    end
 
-      protected
-      def parse(batch_file)
-        batch_file = batch_file.path if batch_file.instance_of?(File)
-        batch = ETL::Batch.new(batch_file)
-        eval(IO.readlines(batch_file).join("\n"), Context.create(batch), batch_file)
-        batch
-      end
+    def self.parse(batch_file)
+      batch_file = batch_file.path if File === batch_file
 
-      def do_resolve(batch)
-        case batch
-        when String
-          ETL::Batch.parse(File.new(batch))
-        when File
-          ETL::Batch.parse(batch)
-        when ETL::Batch
-          batch
-        else
-          raise RuntimeError, "Batch must be a String, File or Batch object"
-        end
+      batch = ETL::Batch.new(batch_file)
+
+      eval(IO.readlines(batch_file).join("\n"), Context.create(batch), batch_file)
+      batch
+    end
+
+    def self.do_resolve(batch)
+      case batch
+      when String     then ETL::Batch.parse(File.new(batch))
+      when File       then ETL::Batch.parse(batch)
+      when ETL::Batch then batch
+      else
+        raise RuntimeError, "Batch must be a String, File or Batch object"
       end
     end
 
