@@ -16,15 +16,21 @@ module ETL #:nodoc:
       def parse(control_file)
         control_file = control_file.path if control_file.instance_of?(File)
         control = ETL::Control.new(control_file)
+        context = Context.create(control)
+
+        context.instance_eval(IO.read(control_file), control_file, 1)
+
         # TODO: better handling of parser errors. Return the line in the control file where the error occurs.
-        eval(IO.readlines(control_file).join("\n"), Context.create(control), control_file)
         control.validate
         control
       end
 
       def parse_text(text)
         control = ETL::Control.new('no-file')
-        eval(text, Context.create(control), 'inline')
+        context = Context.create(control)
+
+        context.instance_eval(text, __FILE__, __LINE__)
+
         control.validate
         control
       end

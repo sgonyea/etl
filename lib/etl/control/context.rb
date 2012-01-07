@@ -9,7 +9,7 @@ module ETL #:nodoc:
       class << self
         # Create a Context instance
         def create(control)
-          Context.new(control).get_binding
+          Context.new(control)
         end
       end
 
@@ -243,11 +243,6 @@ module ETL #:nodoc:
       # Get the defined post-processors
       def post_processors
         control.post_processors
-      end
-
-      # Get the binding object
-      def get_binding
-        binding
       end
 
       protected

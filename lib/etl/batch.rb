@@ -28,7 +28,10 @@ module ETL #:nodoc:
 
       batch = ETL::Batch.new(batch_file)
 
-      eval(IO.readlines(batch_file).join("\n"), Context.create(batch), batch_file)
+      context = Context.create(batch)
+
+      context.instance_eval(IO.read(batch_file), batch_file, 1)
+
       batch
     end
 

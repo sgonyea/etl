@@ -6,7 +6,7 @@ module ETL #:nodoc:
 
       # Create a context that is used when evaluating the batch file
       def self.create(batch)
-        Context.new(batch).get_binding
+        Context.new(batch)
       end
 
       def initialize(batch)
@@ -15,10 +15,6 @@ module ETL #:nodoc:
 
       def file
         batch.file
-      end
-
-      def get_binding
-        binding
       end
 
       def run(file)
